@@ -51,7 +51,11 @@ public struct CaseAccessorsMacro: MemberMacro {
                 let tupleType = TupleTypeSyntax(
                     elements: TupleTypeElementListSyntax {
                         for associatedValue in associatedValues {
-                            TupleTypeElementSyntax(type: associatedValue.type)
+                            if let name = associatedValue.firstName {
+                                TupleTypeElementSyntax(name: name, colon: .colonToken(), type: associatedValue.type)
+                            } else {
+                                TupleTypeElementSyntax(type: associatedValue.type)
+                            }
                         }
                     }
                 )

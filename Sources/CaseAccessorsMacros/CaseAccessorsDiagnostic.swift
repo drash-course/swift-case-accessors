@@ -3,13 +3,14 @@ import SwiftDiagnostics
 
 enum CaseAccessorsDiagnostic: String, DiagnosticMessage {
     case notAnEnum
-    case noCasesWithAssociatedValues
+    case noCases
+    case invalidArguments
 
     var severity: DiagnosticSeverity {
         switch self {
-        case .notAnEnum:
+        case .notAnEnum, .invalidArguments:
             return .error
-        case .noCasesWithAssociatedValues:
+        case .noCases:
             return .warning
         }
     }
@@ -18,8 +19,10 @@ enum CaseAccessorsDiagnostic: String, DiagnosticMessage {
         switch self {
         case .notAnEnum:
             "'@CaseAccessors' can only be applied to 'enum'"
-        case .noCasesWithAssociatedValues:
-            "'@CaseAccessors' was applied to an enum without any cases containing associated values"
+        case .noCases:
+            "'@CaseAccessors' was applied to an enum without any cases. This has no effect."
+        case .invalidArguments:
+            "Invalid arguments, expected '@CaseAccessors(setters: true)'"
         }
     }
 

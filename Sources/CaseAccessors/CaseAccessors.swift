@@ -3,7 +3,8 @@
 /// E.g. the following code:
 ///
 /// ```swift
-/// @CaseAccessors enum TestEnum {
+/// @CaseAccessors
+/// enum TestEnum {
 ///     case one(String)
 ///     case two(Int)
 ///     case three(Bool)
@@ -41,14 +42,15 @@
 /// }
 /// ```
 @attached(member, names: arbitrary)
-public macro CaseAccessors() = #externalMacro(module: "CaseAccessorsMacros", type: "CaseAccessorsMacro")
+public macro CaseAccessors(setters: Bool = false) = #externalMacro(module: "CaseAccessorsMacros", type: "CaseAccessorsMacro")
 
 /// Adds new members to an `enum` that let you perform a quick boolean check on an instance's `case`. For an enum with a case `one`, a method `isOne` will be generated that returns true when an instance's value is `one`.
 ///
 /// E.g.:
 ///
 /// ```swift
-/// @CaseConditionals enum TestEnum {
+/// @CaseConditionals
+/// enum TestEnum {
 ///     case one(String)
 ///     case two(Int)
 ///     case three(Bool)

@@ -4,8 +4,6 @@ import SwiftSyntaxMacros
 import SwiftDiagnostics
 
 public struct CaseAccessorsMacro: MemberMacro {
-    init(setters: Bool) {}
-
     public static func expansion(
         of attribute: AttributeSyntax,
         providingMembersOf declaration: some DeclGroupSyntax,
@@ -20,21 +18,12 @@ public struct CaseAccessorsMacro: MemberMacro {
         }
 
         // parse macro arguments
-        var generateSetters = false
-        if let arguments = attribute.arguments?.as(LabeledExprListSyntax.self) {
-            for argument in arguments {
-                if argument.label?.text == "setters",
-                   let boolLiteral = argument.expression.as(BooleanLiteralExprSyntax.self)
-                {
-                    generateSetters = boolLiteral.literal.tokenKind == .keyword(.true)
-                } else {
-                    context.diagnose(Diagnostic(
-                        node: Syntax(attribute),
-                        message: CaseAccessorsDiagnostic.invalidArguments
-                    ))
-                }
-            }
-        }
+        let generateSetters = attribute.arguments?
+            .as(LabeledExprListSyntax.self)?
+            .first(where: { $0.label?.text == "setters" })?
+            .expression
+            .as(BooleanLiteralExprSyntax.self)?
+            .literal.tokenKind == .keyword(.true)
 
         let members = enumDeclaration.memberBlock.members
         let caseDeclarations = members.compactMap { $0.decl.as(EnumCaseDeclSyntax.self) }
